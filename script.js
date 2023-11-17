@@ -35,6 +35,7 @@ function checkOrder(arr) {
   return rightORwrong;
 }
 
+//iniciar o jogo
 function startGame() {
   const returnRandomNums = generateRanNum();
 
@@ -43,10 +44,32 @@ function startGame() {
     numItems[i].innerHTML = returnRandomNums[i];
   }
 
+  //fazer com que os elementos fiquem com display none
   const getStartText = document.querySelector("#start-text");
   getStartText.style.display = "none";
+
+  const startGameBtn = document.querySelector("#start-game-btn");
+  startGameBtn.style.display = "none";
+
+  //criar botão para reiniciar o jogo causo deseje
+  const resetBtn = document.createElement("button");
+  resetBtn.setAttribute("class", "btn-style");
+  resetBtn.setAttribute("onclick", "window.location.reload()");
+  resetBtn.innerHTML = `reiniciar`;
+
+  globalContainer.append(resetBtn);
+
+  //tempo
+  const timeLimit = setTimeout(timer, 300000);
+  alert("você vai ter 5min para resolver o quebra-cabeça");
+
+  function timer() {
+    alert("tempo acabou!");
+    window.location.reload();
+  }
 }
 
+//conferir os valores
 function checkResult() {
   const numItems = document.querySelectorAll(".container-itens");
   for (let i = 0; i < numItems.length; i++) {
@@ -72,6 +95,25 @@ function checkResult() {
 
 //include another button to check the order of the elements
 
-//start a time count, the player must finish before the time out, once it's time out, the game must refresh the page
+//start a time count, the player must finish before the time out, once it's time out, the game must be restarted
 
 //if the player prefers conferir before starting the game, display an erro message
+const dragElements = document.querySelectorAll(".container-itens");
+for (let i = 0; i < dragElements.length; i++) {
+  dragElements[i].addEventListener("dragstart", () => {
+    console.log("AAA");
+  });
+}
+
+for (let i = 0; i < dragElements.length; i++) {
+  dragElements[i].addEventListener("dragend", () => {
+    console.log("BBB");
+  });
+}
+
+const containerItems = document.querySelector("#container-item");
+containerItems.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const dragElements = document.querySelector(".container-itens");
+  containerItems.appendChild(dragElements);
+});
