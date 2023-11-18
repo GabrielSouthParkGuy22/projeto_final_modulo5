@@ -101,6 +101,7 @@ for (let i = 0; i < containerItems.length; i++) {
   containerItems[i].setAttribute("ondragover", "dragOver(event)");
   containerItems[i].setAttribute("ondrop", "drop(event)");
 }
+console.log(containerItems);
 
 const dragElements = document.getElementsByClassName("span-elements");
 for (let i = 0; i < dragElements.length; i++) {
@@ -109,18 +110,26 @@ for (let i = 0; i < dragElements.length; i++) {
 
 function dragStart(event) {
   event.dataTransfer.setData("number", event.target.id);
+  event.dataTransfer.setData("numberParent", event.target.parentNode.id);
 }
 
 function dragOver(event) {
   event.preventDefault();
 }
 
+//(box.childNodes.length === 0)
+
 function drop(event) {
-  event.dataTransfer.setData("container", event.target.id);
-  const getContainerId = event.dataTransfer.getData("container");
-  const getNumberId = event.dataTransfer.getData("number");
-  const container = document.getElementById(getContainerId);
-  //const containerElements = container.children;
-  const number = document.getElementById(getNumberId);
-  console.log(getContainerId);
+  console.log(event.target.childNodes.length);
+  if (event.target.childNodes.length == 0) {
+    const getNumberId = event.dataTransfer.getData("number");
+    const getNumberParentId = event.dataTransfer.getData("numberParent");
+    const number = document.getElementById(getNumberId);
+    const numberParent = document.getElementById(getNumberParentId);
+    while (numberParent.firstChild) {
+      numberParent.removeChild(numberParent.firstChild);
+    }
+    event.target.appendChild(number);
+    //number.setAttribute("ondragstart", "dragStart(event)");
+  }
 }
