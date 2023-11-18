@@ -39,16 +39,16 @@ function checkOrder(arr) {
 function startGame() {
   const returnRandomNums = generateRanNum();
 
-  const numItems = document.querySelectorAll(".container-itens");
+  const numItems = document.getElementsByClassName("span-elements");
   for (let i = 0; i < numItems.length; i++) {
     numItems[i].innerHTML = returnRandomNums[i];
   }
 
   //fazer com que os elementos fiquem com display none
-  const getStartText = document.querySelector("#start-text");
+  const getStartText = document.getElementById("start-text");
   getStartText.style.display = "none";
 
-  const startGameBtn = document.querySelector("#start-game-btn");
+  const startGameBtn = document.getElementById("start-game-btn");
   startGameBtn.style.display = "none";
 
   //criar botão para reiniciar o jogo causo deseje
@@ -71,10 +71,7 @@ function startGame() {
 
 //conferir os valores
 function checkResult() {
-  const numItems = document.querySelectorAll(".container-itens");
-  for (let i = 0; i < numItems.length; i++) {
-    console.log(numItems[i]);
-  }
+  const numItems = document.getElementsByClassName("span-elements");
 
   if (numItems[0].innerHTML) {
     const returnCheckOrder = checkOrder(numItems);
@@ -98,22 +95,32 @@ function checkResult() {
 //start a time count, the player must finish before the time out, once it's time out, the game must be restarted
 
 //if the player prefers conferir before starting the game, display an erro message
-const dragElements = document.querySelectorAll(".container-itens");
-for (let i = 0; i < dragElements.length; i++) {
-  dragElements[i].addEventListener("dragstart", () => {
-    console.log("AAA");
-  });
+
+const containerItems = document.getElementsByClassName("container-itens");
+for (let i = 0; i < containerItems.length; i++) {
+  containerItems[i].setAttribute("ondragover", "dragOver(event)");
+  containerItems[i].setAttribute("ondrop", "drop(event)");
 }
 
+const dragElements = document.getElementsByClassName("span-elements");
 for (let i = 0; i < dragElements.length; i++) {
-  dragElements[i].addEventListener("dragend", () => {
-    console.log("BBB");
-  });
+  dragElements[i].setAttribute("ondragstart", "dragStart(event)");
 }
 
-const containerItems = document.querySelector("#container-item");
-containerItems.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  const dragElements = document.querySelector(".container-itens");
-  containerItems.appendChild(dragElements);
-});
+function dragStart(event) {
+  event.dataTransfer.setData("number", event.target.id);
+}
+
+function dragOver(event) {
+  event.preventDefault();
+}
+
+function drop(event) {
+  event.dataTransfer.setData("container", event.target.id);
+  const getContainerId = event.dataTransfer.getData("container");
+  const getNumberId = event.dataTransfer.getData("number");
+  const container = document.getElementById(getContainerId);
+  //const containerElements = container.children;
+  const number = document.getElementById(getNumberId);
+  console.log(getContainerId);
+}
